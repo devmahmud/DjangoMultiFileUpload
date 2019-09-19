@@ -1,0 +1,42 @@
+{% extends 'upload/base.html' %}
+
+{% load static %}
+
+{% block javascript %}
+{# JQUERY FILE UPLOAD SCRIPTS #}
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+
+{# RESUMES PAGE SCRIPTS #}
+<script src="{% static 'upload/js/progress-bar-upload.js' %}"></script>
+{% endblock %}
+
+{% block file_content %}
+<div style="margin-bottom: 20px;">
+  <button type="button" class="btn btn-primary js-upload-photos">
+    <span class="glyphicon glyphicon-cloud-upload"></span> Upload Files
+  </button>
+  <input id="fileupload" type="file" name="file" multiple style="display: none;"
+    data-url="{% url 'fileupload:upload' %}" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+</div>
+
+<table id="gallery" class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Files</th>
+      <th>Upload Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in files %}
+    <tr>
+      <td><a href="{{ obj.file.url }}">{{ obj.file.name }}</a></td>
+      <td>{{ obj.uploaded_at|timesince }} ago</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include 'partials/_progress_modal.html' %}
+{% endblock %}
